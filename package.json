@@ -1,0 +1,71 @@
+{
+  "name": "my-app",
+  "productName": "Node-OBSosc",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "build": "electron-packager . Node-OBSosc --ignore=node_modules/electron-packager && cp electron.icns Node-OBSosc-darwin-x64/Node-OBSosc.app/Contents/Resources/electron.icns",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\"",
+    "build-installer": "electron-builder",
+    "make-mac": "npx @electron-forge/cli make --platform darwin"
+  },
+  "build": {
+    "appId": "my-app",
+    "mac": {
+      "icon": "src/Node-OBSosc.ico"
+    },
+    "win": {
+      "icon": "src/Node-OBSosc.ico"
+    }
+  },
+  "keywords": [],
+  "author": {
+    "name": "Joe Shea",
+    "email": "jshea2@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "./src/Node-OBSosc.ico"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-base",
+          "config": {
+            "name": "Node-OBSosc"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-base",
+          "platforms": [
+            "win32"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-base",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-base",
+          "config": {}
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "node-osc": "^5.2.2",
+    "obs-websocket-js": "^4.0.2"
+  },
+  "devDependencies": {
+    "create-electron-app": "^1.0.0",
+    "electron": "^11.0.3",
+    "electron-packager": "^15.1.0"
+  }
+}
