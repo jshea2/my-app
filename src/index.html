@@ -2,51 +2,62 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Node-OBSosc</title>
+    <title>OBSosc</title>
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
    <div class="box">
     <div id="content" >
-      <span class="label">Node-OBSosc</span>
+      <img id="image" src="" width="100" class="center">
+      <!-- <span class="label">OBSosc</span> -->
       <form action="#" id="ipcForm2">
-          <p><span>OBS IP:</span> <label for="obsip"></label> <span>
-              <input type="text" id="obsip" value="127.0.0.1"></span> 
-          </p>
-          <p><span>OBS Port:</span> <label for="obsport"></label> <span>
-            <input type="text" id="obsport" value="4444"></span> 
-        </p>
-        <p><span>OBS Password:</span> <label for="obspassword"></label> <span>
-          <input type="password" id="obspassword" value="secret"></span> 
-      </p>
-    </br>
-      <p><span>OSC IN IP:</span> <label for="oscinip"></label> <span>
-        <input type="text" id="oscinip" value="127.0.0.1"></span> 
-    </p>
-    <p><span>OSC IN Port:</span> <label for="oscinport"></label> <span>
-      <input type="text" id="oscinport" value="3333"></span> 
-  </p>
-      <span>Enable OSC Output:    </span>
-      <label class="switch">
-        <input type="checkbox" id="enableoscout">
-        <div class="slider round">
-         <!--ADDED HTML -->
-         <span class="on">ON</span>
-         <span class="off">OFF</span>
-         <!--END-->
-        </div>
-       </label>
-      <p><span>OSC OUT IP:</span> <label for="oscoutip"></label> <span>
-        <input type="text" id="oscoutip" value="127.0.0.1"></span> 
-    </p>
-  <p><span>OSC OUT Port:</span> <label for="oscoutport"></label> <span>
-    <input type="text" id="oscoutport" value="53000"></span> 
-  </p>
+        <br>
+        <span class="label2">OBS Websocket</span>
+        <br>  
+        IP: <label for="obsip"></label>
+              <input type="text" id="obsip" value="" size="10">
+              </br>
+        Port: <label for="obsport"></label>
+            <input type="text" id="obsport" value="" size="5">
+            </br>
+        Password: <label for="obspassword"></label>
+          <input type="password" id="obspassword" value="" size="5">
+    <hr>
+    <span class="label2">OSC IN</span> 
+  </br>
+    IP:<label for="oscinip"></label>
+        <input type="text" id="oscinip" value="" size="10">
+      </br>
+    Port: <label for="oscinport"></label>
+      <input type="text" id="oscinport" value="" size="5">
+  <hr>
+  <span class="label2">OSC OUT</span>
+</br>
+      IP: <label for="oscoutip"></label>
+        <input type="text" id="oscoutip" value="" size="10">
+      </br>
+      Port: <label for="oscoutport"></label>
+    <input type="text" id="oscoutport" value="" size="5">
+    <hr>
+    
+  On OBS Active Scene Output OSC:
+  <br>
+  <br>
+  <label class="switch">
+    <input type="checkbox" id="enableoscout">
+    <div class="slider round">
+     <!--ADDED HTML -->
+     <span class="on">Enabled</span>
+     <span class="off">Disabled</span>
+     <!--END-->
+    </div>
+   </label>
+   <br>
     <p><span></span> <label for="oscoutprepend"></label> <span>
-      <input type="text" id="oscoutprepend" value="/cue/"></span> 
-  [OBS-Scene-Name]
+      <input type="text" id="oscoutprepend" value="" size="4"></span> 
+  [SceneName]
   <span></span> <label for="oscoutpostpend"></label> <span>
-    <input type="text" id="oscoutpostpend" value="/start"></span> 
+    <input type="text" id="oscoutpostpend" value="" size="4"></span> 
 </p>
 </br>
         <input class="button" id="submit" type="submit" value="Connect">
@@ -58,11 +69,15 @@
       const ipcRenderer = electron.ipcRenderer
       // ipcRenderer.send('poop1', inputs)
 
-      ipcRenderer.on('cpu', (event,data)=>{
+      ipcRenderer.on('cpu', (event,data)=> {
         document.getElementById('cpu').innerHTML = data.toFixed(2)
         console.log('cpu %' + data)
         
       })
+
+      ipcRenderer.on('imgpath', (event,data)=>{   //Listen for data (pathname)
+          document.getElementById("image").src = data   //Get image html source to pathname data
+        })
       
       function obsConnect(){
         ipcRenderer.send('obsConnect', "go")
@@ -83,6 +98,8 @@
         let oscoutport
         let oscoutprepend
         let oscoutpostpend
+        let imgpath
+
         obsip = document.getElementById("obsip").value;
         document.getElementById("obsip").value = obsip
         ipcRenderer.send('obsip', obsip)
@@ -134,6 +151,60 @@
         //console.log("This is the input for oscoutpostpend" + oscoutpostpend)
         obsConnect()
 });
+
+        ipcRenderer.on('obsip', (event,data)=>{   //Listen for data (pathname)
+          document.getElementById("obsip").value = data
+          })
+          
+        ipcRenderer.on('obsport', (event,data)=>{   //Listen for data (pathname)
+        document.getElementById("obsport").value = data
+        })
+
+        ipcRenderer.on('obspassword', (event,data)=>{   //Listen for data (pathname)
+          document.getElementById("obspassword").value = data
+          })
+
+        ipcRenderer.on('oscinip', (event,data)=>{   //Listen for data (pathname)
+        document.getElementById("oscinip").value = data
+          })
+
+        ipcRenderer.on('oscinport', (event,data)=>{   //Listen for data (pathname)
+        document.getElementById("oscinport").value = data
+        })
+
+        ipcRenderer.on('enableobs2app', (event,data)=>{   //Listen for data (pathname)
+          // console.log(data)
+          if(data === "false"){
+            data = false
+          } else if(data === "true"){
+            data = true
+          }
+          document.getElementById("enableoscout").checked = data
+          })
+
+        ipcRenderer.on('oscoutip', (event,data)=>{   //Listen for data (pathname)
+        document.getElementById("oscoutip").value = data
+        })
+
+        ipcRenderer.on('oscoutport', (event,data)=>{   //Listen for data (pathname)
+          document.getElementById("oscoutport").value = data
+          })
+
+        ipcRenderer.on('oscoutprefix', (event,data)=>{   //Listen for data (pathname)
+        document.getElementById("oscoutprepend").value = data
+        })
+
+        ipcRenderer.on('oscoutsuffix', (event,data)=>{   //Listen for data (pathname)
+          document.getElementById("oscoutpostpend").value = data
+          })
+
+          ipcRenderer.on('obsconnect', (event,data)=>{   //Listen for data (pathname)
+          setTimeout(() => {
+            obsConnect()
+          }, 200);
+           
+          })
+       
     </script>
   </body>
 </html>
